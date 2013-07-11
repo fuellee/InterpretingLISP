@@ -17,3 +17,9 @@ or if you have `rlwrap` installed:
     
     chmod +x Interpreter
     ./interpreter
+
+##To do
+
+* This naive inplemetation is dynamic scoped. should use lexical scoping rules.
+* Better the Initialization (eval lispinit.lisp) reponse 
+* Add more funtions to lispinit.lisp or add some module functionality
