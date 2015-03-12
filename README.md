@@ -1,5 +1,6 @@
 InterpretingLISP
 ================
+[![Build Status](https://travis-ci.org/fuellee/InterpretingLISP.svg?branch=master)](https://travis-ci.org/fuellee/InterpretingLISP)
 
 Yet Another LISP Interpreter in C
 
