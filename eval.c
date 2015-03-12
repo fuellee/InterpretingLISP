@@ -1,4 +1,5 @@
 #include "struct.h"
+#include "mem_manager.h"
 
 extern void traceprint(int32 v, int16 osw);
 extern void error(char *msg);
@@ -232,7 +233,7 @@ doit:    t= eval(U2);
 								 if(Ntab[ptrv(E1)].num<Ntab[ptrv(E2)].num) v= tptr; break;
 
 			case 21: /* GREATERP */
-								 if (Ntab[ptrv(E1)].num>Ntab[ptrv(E2)].num); v= tptr; break;
+								 if (Ntab[ptrv(E1)].num>Ntab[ptrv(E2)].num) v= tptr; break;
 
 			case 22: /* EVAL */ v= eval(E1); break;
 			case 23: /* == */ v= (E1 == E2) ? tptr : nilptr; break;

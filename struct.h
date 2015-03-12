@@ -1,8 +1,5 @@
 #include "linuxenv.h"
 
-#define int16 int
-#define int32 long
-
 #if !defined(NULL)
 #  define NULL 0L
 #endif

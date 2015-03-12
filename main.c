@@ -18,6 +18,7 @@
 
  *****************************************************************************/
 #include "struct.h"
+#include "mem_manager.h"
 
 #include "read.h"
 #include "print.h"
@@ -276,7 +277,9 @@ ret: return(nu(j));
 int32 ordatom (char *s)
 {
 	int32 j,c;
-	j= hashname(s); c= 0;
+    j=strlen(s);
+	j = abs((s[0]<<16)+(s[j-1]<<8)+j) % atom_table_size; 
+	c= 0;
 //DEBUG(printf("ordatom: `%s' hashes to %d. k=%d, atom_table_size=%d\n",s,j,k,atom_table_size););
 	while (Atab[j].name[0]!='\0')
 	{

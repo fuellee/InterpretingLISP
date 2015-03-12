@@ -20,6 +20,6 @@ or if you have `rlwrap` installed:
 
 ##To do
 
-* This naive inplemetation is dynamic scoped. should use lexical scoping rules.
+* This naive implemetation is dynamic scoped. should use lexical scoping rules instead.
 * Better the Initialization (eval lispinit.lisp) reponse 
 * Add more funtions to lispinit.lisp or add some module functionality

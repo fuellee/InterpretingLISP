@@ -1,4 +1,5 @@
 #include "struct.h"
+#include "mem_manager.h"
 
 #include "read.h"
 
@@ -7,7 +8,7 @@ static int32 put_back= 0;
 
 
 /*----------------------------------------------------------------------------
-  Gets a line from stream && puts it into s (at most lim chars).  
+  Gets a line from stream && puts it into s (at most lim chars).
   '\n's are dorped;TABs are maped to blank.
   returns the length of readed string;returns -1 (EOF) If there are no characters but EOF.
   -----------------------------------------------------------------------------*/
@@ -17,7 +18,7 @@ int16 fgetline(char *s/*read to*/, int16 lim, FILE *stream/*read from*/)
 #define TAB 9
 	for (N_readed=0; N_readed<lim && (c=fgetc(stream))!=EOF && c!='\n'; ++N_readed)
 	{
-		if (c == TAB) c= ' '; 
+		if (c == TAB) c= ' ';
 		s[N_readed]= c;
 	}
 	s[N_readed]= '\0';
@@ -37,17 +38,17 @@ void fillg(void)
 	{
 sprompt: if (filep == stdin) //only if read form stdio,print the prompt char.
 		 {
-			 sprintf(sout,"%c",prompt); 
+			 sprintf(sout,"%c",prompt);
 			 ourprint(sout);
 		 }
-		 if (fgetline(g,200,filep)<0) 
+		 if (fgetline(g,200,filep)<0)
 			 return;//end of file the buffer g is empty!!!!
 		 //read source from usr input,write to logfile;from file,no write
 		 if (filep == stdin)
 		 {
 			 fprintf(logfilep,"%s\n",g); fflush(logfilep);
 		 }
-		 if (*g == '/')//ignore the line start with '/' 
+		 if (*g == '/')//ignore the line start with '/'
 			 goto sprompt;
 		 pg= g; pge= g+strlen(g); *pge++= ' '; *pge= '\0'; prompt= '>';
 	}
@@ -61,7 +62,7 @@ char getgchar(void)
 {fillg(); return(*pg++);}
 
 /*----------------------------------------------------------------------------
-  Fill the buffer string g if needed; 
+  Fill the buffer string g if needed;
   return a copy of the next character in the input, but don't advance pg..
  * -----------------------------------------------------------------------------*/
 char lookgchar(void)
@@ -88,10 +89,10 @@ int32 e(void)
 #define DIGIT_P(c) ('0'<=(c) && (c)<='9')
 #define ISLOWER(c) ((c)>='a' && (c)<='z')
 
-	if (put_back!=0)//has something put back by read(),return the put_back first 
+	if (put_back!=0)//has something put back by read(),return the put_back first
 	{
-		t= put_back; 
-		put_back= 0; 
+		t= put_back;
+		put_back= 0;
 		return(t);
 	}
 start:
@@ -100,9 +101,9 @@ start:
 	if(c == '(') return 1;
 	else if(c == '\0')
 	{
-		if (topInsave == NULL) 
+		if (topInsave == NULL)
 		{
-			fclose(logfilep); 
+			fclose(logfilep);
 			exit(0);
 		}
 		/* restore the previous input stream */
@@ -116,10 +117,10 @@ start:
 	else if(c == ')') return(4);
 	else if(c == '.')
 	{
-		if (DIGIT_P(lookgchar()))// .[0-9] 
+		if (DIGIT_P(lookgchar()))// .[0-9]
 		{
 			sign= 1.0; v= 0.0; goto fraction;
-		} 
+		}
 		return(3);// .[^0-9] not a number
 	}
 	//if  not([0-9+-][0-9])      means not a number
@@ -137,10 +138,10 @@ start:
 			strcpy(tb->g,g); tb->pg= pg; tb->pge= pge; tb->filep= filep;
 
 			/* set up the new input stream */
-			*g= '\0'; pg= pge= g; 
+			*g= '\0'; pg= pge= g;
 			prompt= '@';
 			filep= fopen(nc+1,"r"); /* skip over the @ */
-			if (filep == NULL) 
+			if (filep == NULL)
 			{
 				printf("@file:%s:\n",nc+1);
 				error("Cannot open @file!");
@@ -149,24 +150,24 @@ start:
 		}
 		/* convert the string nc to upper case */
 		for (np= nc; *np!='\0'; np++)
-			if (ISLOWER((int16)*np)) 
+			if (ISLOWER((int16)*np))
 				*np= (char)TOUPPER((int16)*np);
 		return(ordatom(nc));
 	}
 
 
 //rest: number constructor 			to be reconstructored as a function
-	if(c == '-')//nagetive number 
+	if(c == '-')//nagetive number
 	{
-		v= 0.0;//initial number value 
+		v= 0.0;//initial number value
 		sign= -1.0;
-	} 
+	}
 	else //positive number
 	{
-		v= CHVAL(c); 
+		v= CHVAL(c);
 		sign= 1.0;
 	}
-	while(DIGIT_P(lookgchar())) 
+	while(DIGIT_P(lookgchar()))
 		v= 10.0*v+CHVAL(getgchar());
 	if (lookgchar() == '.')
 	{
@@ -186,7 +187,7 @@ fraction:	k= 1.0; f= 0.0;
 
 /*----------------------------------------------------------------------------
   returns a typed pointer to the S-expression it constructed.
-  
+
   Scans input string g using a lexical token scanning routine e();
   The token found by e() is stripped from the front of g.
   --------------------------------------------------------------------------*/
@@ -195,10 +196,10 @@ int32 read(void)
 	int32 j,k,t,c;
 
 	if ((c= e())<=0) return(c);
-	if (c == 1)/* '(' */
-		if ((k=e()) == 4) return(nilptr);/* ()->nil */ 
+	if (c == 1) {/* '(' */
+		if ((k=e()) == 4) return(nilptr);/* ()->nil */
 		else put_back= k;//put it back
-
+    }
 
 #define skLp Atab[sk].L
 	/* to permit recursion, skLp is a list of lists. */
@@ -214,16 +215,16 @@ next:	if ((c= e())<=2)// ' ( atom number
 			t= newCONS(nilptr,nilptr); CDR(j)= t; j= t;
 			if (c<=0) //atom/number
 			{
-				CAR(j)= c; 
+				CAR(j)= c;
 				goto next;
 			}
-			put_back= c; 
+			put_back= c;
 			goto scan;
 		}
 		if (c!=4) /*not ) */
 		{
-			CDR(j)= read(); 
-			if (e()!=4) 
+			CDR(j)= read();
+			if (e()!=4)
 				error("syntax error");
 		}
 		skLp= CDR(skLp); return(k);
@@ -231,13 +232,14 @@ next:	if ((c= e())<=2)// ' ( atom number
 
 	if (c == 2)/* ' */
 	{
-		CAR(j)= quoteptr; 
-		CDR(j)= t= newCONS(nilptr,nilptr); 
+		CAR(j)= quoteptr;
+		CDR(j)= t= newCONS(nilptr,nilptr);
 		CAR(t)= read();
-		skLp= CDR(skLp); 
+		skLp= CDR(skLp);
 		return(k);
 	}
 
+    printf("c=%ld\n", c);
 	error("bad syntax");
 	return -1;//should never come here.
 }

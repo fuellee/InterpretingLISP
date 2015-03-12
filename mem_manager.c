@@ -1,11 +1,5 @@
 #include "struct.h"
-
-//mem_manager.c provide:
-int32 newCONS(int32 x, int32 y);
-void gc(void);
-void gcmark(int32 p);
-
-void traceprint(int32 v, int16 osw);
+#include "mem_manager.h"
 
 //mem_manager.c need:
 extern int16 ct; /* eval depth count */

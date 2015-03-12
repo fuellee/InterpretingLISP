@@ -1,0 +1,4 @@
+*.o
+*.gch
+*.log
+my_lisp_interpreter

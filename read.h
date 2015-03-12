@@ -1,3 +1,5 @@
+#include "linuxenv.h"
+
 //provide by read.c
 extern int32 read(void);
 
